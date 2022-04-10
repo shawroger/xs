@@ -1,33 +1,20 @@
 package main
 
 import (
-	"gitee.com/feimos/xs/controller"
 	"gitee.com/feimos/xs/server"
-	"os"
-	"path"
 )
 
 func main() {
 
-	dir := "testData/xlsx"
 	svr := server.New()
-	svr.Debug = true
-	files, err := os.ReadDir(dir)
+	err := svr.LoadConfigFile("./testdata/.xs.json")
 	if err != nil {
 		panic(err)
 	}
 
-	for _, file := range files {
-		if !file.IsDir() {
-			filename := path.Join(dir, file.Name())
-			c, err := controller.OpenFile(filename)
-			if err != nil {
-				panic(err)
-			}
-			svr.UseController(c)
-		}
+	err = svr.Run()
+	if err != nil {
+		panic(err)
 	}
-
-	svr.Run()
 
 }

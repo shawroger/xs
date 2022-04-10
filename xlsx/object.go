@@ -1,7 +1,5 @@
 package xlsx
 
-import "github.com/xuri/excelize/v2"
-
 // Object
 //
 // 对于每一个 XLSX 文件
@@ -14,7 +12,7 @@ type Object struct {
 // NewObjectFromFile
 //
 // 从 *excelize.File 句柄生成 Object 对象
-func NewObjectFromFile(f *excelize.File) (*Object, error) {
+func NewObjectFromFile(f *File) (*Object, error) {
 	var sheets []Sheet
 	sheetList := f.GetSheetList()
 	for _, sheetName := range sheetList {
@@ -36,7 +34,7 @@ func NewObjectFromFile(f *excelize.File) (*Object, error) {
 				}
 				sheet.Key = keys
 			} else {
-				parsedRow := ParseRowFromStringArr(sheet.Key, row)
+				parsedRow := ParseRowFromStringArr(row)
 				sheet.Rows = append(sheet.Rows, *parsedRow)
 			}
 		}

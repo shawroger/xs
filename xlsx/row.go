@@ -1,7 +1,7 @@
 package xlsx
 
 import (
-	"gitee.com/feimos/xs/common"
+	"gitee.com/feimos/xs/datatype"
 	"gitee.com/feimos/xs/utils"
 )
 
@@ -9,11 +9,6 @@ import (
 //
 // 从 Sheet 中读取到的若干行数据
 type Row struct {
-	// 单行长度
-	Len int
-
-	// KEY 键名
-	Key []string
 
 	// VAL 值
 	Val []*Value
@@ -27,41 +22,28 @@ type Rows []Row
 // ParseRowFromStringArr
 //
 // 从双重 string 数组创建 Row
-func ParseRowFromStringArr(keys, rows []string) *Row {
+func ParseRowFromStringArr(rows []string) *Row {
 	var res Row
 	for _, val := range rows {
 		res.Val = append(res.Val, NewValue(val))
-
-	}
-
-	// 设置键名
-	res.Key = keys
-
-	// 设置长度
-	// 取较小值
-	keyLen := len(res.Key)
-	valLen := len(res.Val)
-
-	if keyLen < valLen {
-		res.Len = keyLen
-	} else {
-		res.Len = valLen
 	}
 
 	return &res
 }
 
-// ToJson
+// ToJsonWithKeys
 //
 // 将 Row 转为 json 格式
-func (r *Row) ToJson() *common.JsonMap {
-	json := make(common.JsonMap)
+func (r *Row) ToJsonWithKeys(keys []string) *datatype.JsonMap {
+	json := make(datatype.JsonMap)
 
-	for i := 0; i < r.Len; i++ {
-		key := utils.UnifyKeyName(r.Key[i])
-		val := r.Val[i].TrueValue
-		json[key] = val
+	for i := 0; i < len(r.Val); i++ {
+		if i < len(keys) {
+			key := utils.UnifyKeyName(keys[i])
+			val := r.Val[i].TrueValue
+			json[key] = val
+		}
+
 	}
-
 	return &json
 }

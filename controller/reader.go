@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"gitee.com/feimos/xs/common"
+	"gitee.com/feimos/xs/datatype"
 )
 
 // Reader
@@ -10,5 +10,5 @@ import (
 type Reader interface {
 	// ToJson
 	// 转为 json 格式
-	ToJson() *common.JsonMap
+	ToJson() *datatype.JsonMap
 }

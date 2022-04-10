@@ -46,6 +46,20 @@ func GenStandardPath(rawPath string) string {
 	return UsePureFuncOneTypes(rawPath, GetPureName, ToSnakeCase)
 }
 
+// JoinStandardPath
+//
+// 连接多条路径，生成标准路径字符串
+func JoinStandardPath(rawPaths ...string) string {
+	root := GenStandardPath(rawPaths[0])
+	for i, rawPath := range rawPaths {
+		if i > 0 {
+			root += "/" + GenStandardPath(rawPath)
+		}
+	}
+
+	return root
+}
+
 // UnifyKeyName
 //
 // 键名 KEY 标准化
