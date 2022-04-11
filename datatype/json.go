@@ -27,6 +27,14 @@ type JsonUnify interface {
 // 可用于输出的 json 类型
 type JsonArray []JsonMap
 
+// NewArray
+//
+// 创建一个空 JsonArray
+func NewArray() *JsonArray {
+	var res JsonArray = make([]JsonMap, 0)
+	return &res
+}
+
 // Unify
 //
 // 判断有无 data 字段

@@ -15,36 +15,15 @@ func (h *Handler) CreateServiceGet(url string, sheet *xlsx.Sheet) {
 
 	h.GET(url, func(c *Context) {
 
-		// 查找 ?_id=xxx 情况
-		id := c.Query("_id")
 		res := datatype.NewJson()
 
+		// 查找 ?_id=xxx 情况
+		id := c.Query("_id")
+
+		// 存在 query[_id]
 		if id != "" {
-			json, err := handlerQueryID(id, sheet)
-
-			switch err.(type) {
-			case nil:
-				{
-					// 成功返回数据
-					res.SetData(json)
-					res.SetMsg("ok")
-					break
-				}
-			case xlsx.ErrNotGetRowByIndex:
-				{
-					// 没有找到 index
-					res.SetData([]string{})
-					res.SetMsg("not found id %v", id)
-					break
-				}
-			default:
-				{
-					// 不正确的 id 格式
-					res.SetData([]string{})
-					res.SetMsg("invalid id %v", id)
-				}
-
-			}
+			json, err := parseID(id, sheet)
+			handlerErrType(res, json, err, id)
 
 		} else {
 			// 其他情况，返回所有
@@ -58,7 +37,7 @@ func (h *Handler) CreateServiceGet(url string, sheet *xlsx.Sheet) {
 }
 
 // 处理有 _id 参数的情况
-func handlerQueryID(id string, sheet *xlsx.Sheet) (*datatype.JsonMap, error) {
+func parseID(id string, sheet *xlsx.Sheet) (*datatype.JsonMap, error) {
 
 	index, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
@@ -77,4 +56,32 @@ func handlerQueryID(id string, sheet *xlsx.Sheet) (*datatype.JsonMap, error) {
 	json := row.ToJsonWithKeys(sheet.Key)
 	json.SetID(int(index))
 	return json, nil
+}
+
+// 处理不同 err 类型情况下的 json 值
+func handlerErrType(res, json *datatype.JsonMap, err error, id string) {
+
+	switch err.(type) {
+	case nil:
+		{
+			// 成功返回数据
+			res.SetData(json)
+			res.SetMsg("ok")
+			break
+		}
+	case xlsx.ErrNotGetRowByIndex:
+		{
+			// 没有找到 index
+			res.SetData(datatype.NewArray())
+			res.SetMsg("not found id %v", id)
+			break
+		}
+	default:
+		{
+			// 不正确的 id 格式
+			res.SetData(datatype.NewArray())
+			res.SetMsg("invalid id %v", id)
+		}
+
+	}
 }

@@ -4,10 +4,11 @@ package config
 //
 // 配置项 结构体
 type Config struct {
-	Port     int
-	Debug    bool
-	GinDebug bool
-	Files    []FileConfig
+	Port       int
+	Debug      bool
+	GinDebug   bool
+	SheetIndex bool
+	Files      []FileConfig
 }
 
 // FileConfig

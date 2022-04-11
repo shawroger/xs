@@ -1,6 +1,8 @@
 package datatype
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // Set
 //
@@ -34,14 +36,16 @@ func (m *JsonMap) SetCode(code int) {
 //
 // 设置 msg 字符串
 func (m *JsonMap) SetMsg(format string, values ...any) {
-	var val string
-	if len(values) == 0 {
-		val = format
-	} else {
-		val = fmt.Sprintf(format, values)
-	}
+	val := fmt.Sprintf(format, values...)
+	m.Set("message", val)
+}
 
-	m.Set("msg", val)
+// SetErrMsg
+//
+// 设置 error 字符串
+func (m *JsonMap) SetErrMsg(format string, values ...any) {
+	val := fmt.Sprintf(format, values...)
+	m.Set("error", val)
 }
 
 // Unify

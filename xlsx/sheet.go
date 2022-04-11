@@ -25,7 +25,7 @@ func (s *Sheet) ToJson() datatype.JsonArray {
 	var res datatype.JsonArray
 	for i, row := range s.Rows {
 		json := row.ToJsonWithKeys(s.Key)
-		json.SetID(i)
+		json.SetID(i + 1)
 		res = append(res, *json)
 	}
 	return res
@@ -42,7 +42,7 @@ type ErrNotGetIndexByKey struct {
 }
 
 func (e ErrNotGetIndexByKey) Error() string {
-	return fmt.Sprintf("Can not find key \"%v\" in sheet \"%v\"", e.key, e.name)
+	return fmt.Sprintf("Can not find key %v in sheet %v", e.key, e.name)
 }
 
 // GetIndexByKey
@@ -65,12 +65,12 @@ func (s *Sheet) GetIndexByKey(key string) (int, error) {
 //
 // GetRowByIndex 返回的错误
 type ErrNotGetRowByIndex struct {
-	index int
-	name  string
+	Index int
+	Name  string
 }
 
 func (e ErrNotGetRowByIndex) Error() string {
-	return fmt.Sprintf("Can not find index \"%v\" in sheet \"%v\"", e.index, e.name)
+	return fmt.Sprintf("Can not find index %v in sheet %v", e.Index, e.Name)
 }
 
 // GetRowByIndex
@@ -78,13 +78,13 @@ func (e ErrNotGetRowByIndex) Error() string {
 // 通过 index 获取 row
 func (s *Sheet) GetRowByIndex(index int) (*Row, error) {
 	for i, row := range s.Rows {
-		if i == index {
+		if i == index-1 {
 			return &row, nil
 		}
 	}
 
 	return nil, ErrNotGetRowByIndex{
-		index: index,
-		name:  s.Name,
+		Index: index,
+		Name:  s.Name,
 	}
 }
