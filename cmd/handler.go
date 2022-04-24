@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"gitee.com/feimos/xs/config"
 	"gitee.com/feimos/xs/datatype"
 	"gitee.com/feimos/xs/server"
@@ -53,7 +54,14 @@ func startServerFromConf(flags Flags, a *datatype.AppInfo) error {
 
 func startServerFromFile(flags Flags, a *datatype.AppInfo) error {
 
-	files := utils.ParseCmdFilesFlag(flags.files)
+	files, err := utils.ParseCmdFilesFlag(flags.files)
+
+	fmt.Printf("%#v\n", files)
+
+	if err != nil {
+		return err
+	}
+
 	c := config.NewConfigFromSingleFile(files...)
 	// 重新设置 port
 	if flags.port != 0 {
@@ -61,7 +69,7 @@ func startServerFromFile(flags Flags, a *datatype.AppInfo) error {
 	}
 
 	svr := server.New().BindAppInfo(a)
-	err := svr.UseConfig(c)
+	err = svr.UseConfig(c)
 
 	if err != nil {
 		return err

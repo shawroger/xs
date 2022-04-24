@@ -1,6 +1,8 @@
 package config
 
-import "gitee.com/feimos/xs/utils"
+import (
+	"gitee.com/feimos/xs/utils"
+)
 
 // Config
 //
@@ -30,6 +32,7 @@ type FileConfig struct {
 //
 // 从单文件路径生成默认 FileConfig
 func CreateDefaultFromFilename(file string) FileConfig {
+
 	prefix := utils.GetPureName(file)
 	return FileConfig{
 		File:   file,

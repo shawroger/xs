@@ -2,6 +2,7 @@ package utils
 
 import (
 	"path"
+	"path/filepath"
 	"regexp"
 	"strings"
 )
@@ -72,6 +73,22 @@ func UnifyKeyName(key string) string {
 // ParseCmdFilesFlag
 //
 // 解析 cmd.flags.files 字段
-func ParseCmdFilesFlag(files string) []string {
-	return strings.Split(files, "+")
+func ParseCmdFilesFlag(files string) ([]string, error) {
+
+	// 不是 glob 路径
+	if !strings.Contains(files, "*") {
+		return strings.Split(files, "+"), nil
+	}
+
+	matches, err := filepath.Glob(files)
+
+	if err != nil {
+		return nil, err
+	}
+
+	for i, file := range matches {
+		matches[i] = strings.ReplaceAll(file, "\\", "/")
+	}
+
+	return matches, nil
 }

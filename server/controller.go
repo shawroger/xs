@@ -6,6 +6,7 @@ import (
 	"gitee.com/feimos/xs/utils"
 	"gitee.com/feimos/xs/xlsx"
 	"github.com/gin-gonic/gin"
+	"strings"
 )
 
 // Context
@@ -13,12 +14,27 @@ import (
 // gin.Context 的同名
 type Context = gin.Context
 
+// 如果字符串有空格则替换为其他字符，并给出警告
+func checkPathWithSpace(h *Handler, rawPath, replace string) string {
+	if strings.Contains(rawPath, " ") {
+		newPath := strings.ReplaceAll(rawPath, " ", replace)
+		h.debug("Warning: \"%v\" has space , it will be rename as \"%v\"", rawPath, newPath)
+		return newPath
+	}
+
+	return rawPath
+}
+
 // UseController
 //
 // 通过加载 *controller.Controller 创建服务器
 //
 // currentFc 为当前加载的文件配置
 func (h *Handler) UseController(cc *controller.Controller, currentFc *config.FileConfig) {
+
+	_c := func(v string) string {
+		return checkPathWithSpace(h, v, "-")
+	}
 
 	for _, sheet := range *cc.Object.Sheets {
 
@@ -31,9 +47,9 @@ func (h *Handler) UseController(cc *controller.Controller, currentFc *config.Fil
 		if currentFc.Prefix != "" {
 			prefix = utils.GenStandardPath(currentFc.Prefix)
 			suffix = utils.GenStandardPath(sheet.Name)
-			url = utils.JoinStandardPath(prefix, suffix)
+			url = _c(utils.JoinStandardPath(prefix, suffix))
 		} else {
-			url = utils.JoinStandardPath(cc.RawFilePath, sheet.Name)
+			url = _c(utils.JoinStandardPath(cc.RawFilePath, sheet.Name))
 		}
 
 		// 保存数据
