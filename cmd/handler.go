@@ -4,6 +4,7 @@ import (
 	"gitee.com/feimos/xs/config"
 	"gitee.com/feimos/xs/datatype"
 	"gitee.com/feimos/xs/server"
+	"gitee.com/feimos/xs/utils"
 )
 
 type ErrMissingDataSource struct {
@@ -20,7 +21,7 @@ func serverHandler(flags Flags, a *datatype.AppInfo) error {
 	}
 
 	// 直接读取 xlsx 文件
-	if flags.file != "" {
+	if flags.files != "" {
 		return startServerFromFile(flags, a)
 	}
 
@@ -40,10 +41,6 @@ func startServerFromConf(flags Flags, a *datatype.AppInfo) error {
 		c.Port = flags.port
 	}
 
-	if flags.sheetIndex {
-		c.SheetIndex = flags.sheetIndex
-	}
-
 	svr := server.New().BindAppInfo(a)
 	err = svr.UseConfig(c)
 
@@ -56,15 +53,11 @@ func startServerFromConf(flags Flags, a *datatype.AppInfo) error {
 
 func startServerFromFile(flags Flags, a *datatype.AppInfo) error {
 
-	c := config.NewConfigFromSingleFile(flags.file)
-
+	files := utils.ParseCmdFilesFlag(flags.files)
+	c := config.NewConfigFromSingleFile(files...)
 	// 重新设置 port
 	if flags.port != 0 {
 		c.Port = flags.port
-	}
-
-	if flags.sheetIndex {
-		c.SheetIndex = flags.sheetIndex
 	}
 
 	svr := server.New().BindAppInfo(a)

@@ -68,3 +68,10 @@ func UnifyKeyName(key string) string {
 	key = strings.ReplaceAll(key, " ", "-")
 	return key
 }
+
+// ParseCmdFilesFlag
+//
+// 解析 cmd.flags.files 字段
+func ParseCmdFilesFlag(files string) []string {
+	return strings.Split(files, "+")
+}

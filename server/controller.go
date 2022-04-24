@@ -20,7 +20,7 @@ type Context = gin.Context
 // currentFc 为当前加载的文件配置
 func (h *Handler) UseController(cc *controller.Controller, currentFc *config.FileConfig) {
 
-	for index, sheet := range *cc.Object.Sheets {
+	for _, sheet := range *cc.Object.Sheets {
 
 		var (
 			url    string
@@ -34,17 +34,6 @@ func (h *Handler) UseController(cc *controller.Controller, currentFc *config.Fil
 			url = utils.JoinStandardPath(prefix, suffix)
 		} else {
 			url = utils.JoinStandardPath(cc.RawFilePath, sheet.Name)
-		}
-
-		// 自动将第一个 sheet 作为 index
-		if h.Config.SheetIndex && index == 0 {
-			h.debug("sheet %v will be used as index", sheet.Name)
-			HandlerCreateService(h, prefix, cc.File, &sheet)
-			// 保存数据
-			h.HTMLInjectData = append(h.HTMLInjectData, HTMLInjectData{
-				Url:  prefix,
-				File: cc.RawFilePath,
-			})
 		}
 
 		// 保存数据

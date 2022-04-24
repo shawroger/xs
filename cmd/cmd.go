@@ -9,10 +9,9 @@ import (
 //
 // cmd 的 flag 信息
 type Flags struct {
-	file       string
-	conf       string
-	port       int
-	sheetIndex bool
+	files string
+	conf  string
+	port  int
 }
 
 func AppInit(a *datatype.AppInfo) *cli.App {
@@ -29,7 +28,7 @@ func AppInit(a *datatype.AppInfo) *cli.App {
 			Aliases: []string{"c"},
 			Usage:   "define the config file",
 		}, &cli.StringFlag{
-			Name:    "file",
+			Name:    "files",
 			Aliases: []string{"f"},
 			Usage:   "define the xlsx file",
 		},
@@ -38,20 +37,14 @@ func AppInit(a *datatype.AppInfo) *cli.App {
 			Aliases: []string{"p"},
 			Usage:   "define the port of server",
 		},
-		&cli.BoolFlag{
-			Name:    "sheetIndex",
-			Aliases: []string{"i"},
-			Usage:   "Sheet1 will be used as index",
-		},
 	}
 
 	app.Action = func(c *cli.Context) error {
 		port := c.Int("port")
-		file := c.String("file")
 		conf := c.String("conf")
-		sheetIndex := c.Bool("sheetIndex")
+		files := c.String("files")
 
-		return serverHandler(Flags{file, conf, port, sheetIndex}, a)
+		return serverHandler(Flags{files, conf, port}, a)
 	}
 
 	return app

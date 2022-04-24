@@ -6,11 +6,10 @@ import "gitee.com/feimos/xs/utils"
 //
 // 配置项 结构体
 type Config struct {
-	Port       int
-	Debug      bool
-	GinDebug   bool
-	SheetIndex bool
-	Files      []FileConfig
+	Port     int
+	Debug    bool
+	GinDebug bool
+	Files    []FileConfig
 }
 
 // FileConfig
@@ -27,7 +26,10 @@ type FileConfig struct {
 	Sheets []string
 }
 
-func CreateDefaultFromFile(file string) FileConfig {
+// CreateDefaultFromFilename
+//
+// 从单文件路径生成默认 FileConfig
+func CreateDefaultFromFilename(file string) FileConfig {
 	prefix := utils.GetPureName(file)
 	return FileConfig{
 		File:   file,
