@@ -5,7 +5,6 @@ import (
 	_ "embed"
 	"fmt"
 	"io/fs"
-	"io/ioutil"
 	"path"
 )
 
@@ -34,7 +33,8 @@ func ParseStaticFiles() []StaticFile {
 		if !template.IsDir() {
 			name := template.Name()
 			url := path.Join(staticDir, name)
-			content, err := ioutil.ReadFile(path.Join("templates", url))
+
+			content, err := assetsDir.ReadFile(url)
 			if err != nil {
 				panic(err)
 			}
