@@ -26,14 +26,38 @@ func (h *Handler) CreateServiceGet(url string, sheet *xlsx.Sheet) {
 			handlerErrType(res, json, err, id)
 
 		} else {
-			// 其他情况，返回所有
-			res.SetData(sheet.ToJson())
+
+			// 获取所有参数列表
+			valueList := getAllQueryKeys(c, sheet)
+			jsonArray := parseValueList(valueList, sheet)
+			res.SetData(jsonArray)
 			res.SetMsg("ok")
+
 		}
 
 		res.SetCode(200)
 		c.JSON(200, res)
 	})
+}
+
+// 处理有其他参数的情况
+func parseValueList(valueList []any, sheet *xlsx.Sheet) *datatype.JsonArray {
+
+	jsonList := datatype.NewArray()
+	for index, row := range sheet.Rows {
+		rowValue := row.Val
+		for i, val := range rowValue {
+
+			if valueList[i] == val.TrueValue && val.Liter != "" {
+				// 找到了对应的 Row
+				json := row.ToJsonWithKeys(sheet.Key)
+				json.SetID(int(index))
+				jsonList.Add(*json)
+			}
+
+		}
+	}
+	return jsonList
 }
 
 // 处理有 _id 参数的情况

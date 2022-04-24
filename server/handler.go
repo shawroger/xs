@@ -79,7 +79,6 @@ func (h *Handler) Run() error {
 
 	// 覆盖 Port
 	if c.Port != 0 {
-		h.debug("server port will be set as \":%v\" due to the config file", c.Port)
 		h.Port = ":" + strconv.Itoa(c.Port)
 	}
 

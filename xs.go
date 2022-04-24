@@ -1,20 +1,19 @@
 package main
 
 import (
-	"gitee.com/feimos/xs/server"
+	"gitee.com/feimos/xs/cmd"
+	"log"
+	"os"
 )
+
+var appInfo = cmd.AppInfo{
+	Version: "0.0.1",
+}
 
 func main() {
 
-	svr := server.New()
-	err := svr.LoadConfigFile("./testdata/.xs.json")
-	if err != nil {
-		panic(err)
+	app := cmd.AppInit(&appInfo)
+	if err := app.Run(os.Args); err != nil {
+		log.Fatalln(err)
 	}
-
-	err = svr.Run()
-	if err != nil {
-		panic(err)
-	}
-
 }

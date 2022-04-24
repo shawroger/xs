@@ -35,6 +35,13 @@ func NewArray() *JsonArray {
 	return &res
 }
 
+// Add
+//
+// 加入数据
+func (a *JsonArray) Add(data JsonMap) {
+	*a = append(*a, data)
+}
+
 // Unify
 //
 // 判断有无 data 字段

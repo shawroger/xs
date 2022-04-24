@@ -39,7 +39,6 @@ func (h *Handler) UseController(cc *controller.Controller, currentFc *config.Fil
 		// 自动将第一个 sheet 作为 index
 		if h.Config.SheetIndex && index == 0 {
 			h.debug("sheet %v will be used as index", sheet.Name)
-
 			HandlerCreateService(h, prefix, cc.File, &sheet)
 
 		}
