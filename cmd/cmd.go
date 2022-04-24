@@ -1,26 +1,21 @@
 package cmd
 
 import (
+	"gitee.com/feimos/xs/datatype"
 	"github.com/urfave/cli/v2"
 )
-
-// AppInfo
-//
-// 配置 cmd 信息
-type AppInfo struct {
-	Version string
-}
 
 // Flags
 //
 // cmd 的 flag 信息
 type Flags struct {
 	file       string
+	conf       string
 	port       int
 	sheetIndex bool
 }
 
-func AppInit(a *AppInfo) *cli.App {
+func AppInit(a *datatype.AppInfo) *cli.App {
 
 	app := &cli.App{}
 
@@ -30,10 +25,13 @@ func AppInit(a *AppInfo) *cli.App {
 
 	app.Flags = []cli.Flag{
 		&cli.StringFlag{
-			Name:     "file",
-			Required: true,
-			Aliases:  []string{"f"},
-			Usage:    "define the config file",
+			Name:    "conf",
+			Aliases: []string{"c"},
+			Usage:   "define the config file",
+		}, &cli.StringFlag{
+			Name:    "file",
+			Aliases: []string{"f"},
+			Usage:   "define the xlsx file",
 		},
 		&cli.IntFlag{
 			Name:    "port",
@@ -50,9 +48,10 @@ func AppInit(a *AppInfo) *cli.App {
 	app.Action = func(c *cli.Context) error {
 		port := c.Int("port")
 		file := c.String("file")
+		conf := c.String("conf")
 		sheetIndex := c.Bool("sheetIndex")
 
-		return serverHandler(Flags{file, port, sheetIndex})
+		return serverHandler(Flags{file, conf, port, sheetIndex}, a)
 	}
 
 	return app

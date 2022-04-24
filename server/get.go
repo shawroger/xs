@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"gitee.com/feimos/xs/datatype"
 	"gitee.com/feimos/xs/xlsx"
 	"strconv"
@@ -29,9 +30,15 @@ func (h *Handler) CreateServiceGet(url string, sheet *xlsx.Sheet) {
 
 			// 获取所有参数列表
 			valueList := getAllQueryKeys(c, sheet)
-			jsonArray := parseValueList(valueList, sheet)
-			res.SetData(jsonArray)
-			res.SetMsg("ok")
+			if isMissingValueList(valueList) {
+				json := sheet.ToJson()
+				res.SetData(json)
+				res.SetMsg("ok")
+			} else {
+				jsonArray := parseValueList(valueList, sheet)
+				res.SetData(jsonArray)
+				res.SetMsg("ok")
+			}
 
 		}
 
@@ -58,6 +65,17 @@ func parseValueList(valueList []any, sheet *xlsx.Sheet) *datatype.JsonArray {
 		}
 	}
 	return jsonList
+}
+
+// 判断是不是没有传参
+func isMissingValueList(valueList []any) bool {
+	for _, v := range valueList {
+		if fmt.Sprintf("%v", v) != "" {
+			return false
+		}
+	}
+
+	return true
 }
 
 // 处理有 _id 参数的情况

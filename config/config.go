@@ -1,5 +1,7 @@
 package config
 
+import "gitee.com/feimos/xs/utils"
+
 // Config
 //
 // 配置项 结构体
@@ -23,4 +25,12 @@ type FileConfig struct {
 	//
 	// 为空，则是为全部开启
 	Sheets []string
+}
+
+func CreateDefaultFromFile(file string) FileConfig {
+	prefix := utils.GetPureName(file)
+	return FileConfig{
+		File:   file,
+		Prefix: prefix,
+	}
 }

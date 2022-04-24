@@ -2,11 +2,20 @@ package server
 
 import (
 	"gitee.com/feimos/xs/config"
+	"gitee.com/feimos/xs/datatype"
 	"gitee.com/feimos/xs/utils"
 	"github.com/gin-gonic/gin"
 	"log"
 	"strconv"
 )
+
+// HTMLInjectData
+//
+// 注入 index.html 所需的数据
+type HTMLInjectData struct {
+	Url  string
+	File string
+}
 
 // Handler
 //
@@ -15,10 +24,12 @@ import (
 // 服务器主引擎
 type Handler struct {
 	*gin.Engine
-	Debug   bool
-	GinMode bool
-	Port    string
-	Config  *config.Config
+	Debug          bool
+	GinMode        bool
+	Port           string
+	HTMLInjectData []HTMLInjectData
+	Config         *config.Config
+	AppInfo        *datatype.AppInfo
 }
 
 // New

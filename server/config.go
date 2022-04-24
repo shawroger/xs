@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gitee.com/feimos/xs/config"
 	"gitee.com/feimos/xs/controller"
+	"gitee.com/feimos/xs/datatype"
 )
 
 // UseConfig
@@ -23,6 +24,8 @@ func (h *Handler) UseConfig(c *config.Config) error {
 		h.UseController(cc, &fc)
 	}
 
+	h.CreateServiceIndex()
+
 	return nil
 }
 
@@ -41,6 +44,14 @@ func (h *Handler) LoadConfigFile(filename string) error {
 		return err
 	}
 	return nil
+}
+
+// BindAppInfo
+//
+// 从 cmd 中绑定 AppInfo
+func (h *Handler) BindAppInfo(a *datatype.AppInfo) *Handler {
+	h.AppInfo = a
+	return h
 }
 
 // ErrMissingHandlerConfig

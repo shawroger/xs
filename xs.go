@@ -2,11 +2,12 @@ package main
 
 import (
 	"gitee.com/feimos/xs/cmd"
+	"gitee.com/feimos/xs/datatype"
 	"log"
 	"os"
 )
 
-var appInfo = cmd.AppInfo{
+var appInfo = datatype.AppInfo{
 	Version: "0.0.1",
 }
 

@@ -1,0 +1,1 @@
+#app h1{text-align:center;font-weight:400}#app h1 span{font-size:15px}#app .table-box{display:flex;justify-content:center}#app .table-box a{text-decoration:none;color:orange}#app .table-box .el-table{width:80%}@media screen and (max-width: 768px){#app .table-box .el-table{width:100%}}

@@ -40,20 +40,32 @@ func (h *Handler) UseController(cc *controller.Controller, currentFc *config.Fil
 		if h.Config.SheetIndex && index == 0 {
 			h.debug("sheet %v will be used as index", sheet.Name)
 			HandlerCreateService(h, prefix, cc.File, &sheet)
-
+			// 保存数据
+			h.HTMLInjectData = append(h.HTMLInjectData, HTMLInjectData{
+				Url:  prefix,
+				File: cc.RawFilePath,
+			})
 		}
+
+		// 保存数据
+		h.HTMLInjectData = append(h.HTMLInjectData, HTMLInjectData{
+			Url:  url,
+			File: cc.RawFilePath,
+		})
 
 		// 筛选 sheet 并且建立服务
 		if currentFc.Sheets == nil || len(currentFc.Sheets) == 0 || utils.Exist(currentFc.Sheets, sheet.Name) {
 			HandlerCreateService(h, url, cc.File, &sheet)
 		}
 	}
+
 }
 
 // HandlerCreateService
 //
 // 创建服务
 func HandlerCreateService(h *Handler, url string, f *xlsx.File, sheet *xlsx.Sheet) {
+
 	// 建立 GET 服务
 	h.CreateServiceGet(url, sheet)
 
