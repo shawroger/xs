@@ -75,20 +75,35 @@ func UnifyKeyName(key string) string {
 // 解析 cmd.flags.files 字段
 func ParseCmdFilesFlag(files string) ([]string, error) {
 
-	// 不是 glob 路径
-	if !strings.Contains(files, "*") {
-		return strings.Split(files, "+"), nil
+	var res []string
+	var fileList []string
+
+	// 处理 + 号
+	if strings.Contains(files, "+") {
+		fileList = strings.Split(files, "+")
+	} else {
+		fileList = append(fileList, files)
 	}
 
-	matches, err := filepath.Glob(files)
+	for _, file := range fileList {
+		// 处理 glob 路径
+		if strings.Contains(file, "*") {
+			matches, err := filepath.Glob(file)
 
-	if err != nil {
-		return nil, err
+			if err != nil {
+				return nil, err
+			}
+
+			for i, file := range matches {
+				matches[i] = strings.ReplaceAll(file, "\\", "/")
+			}
+
+			res = append(res, matches...)
+		} else {
+			res = append(res, file)
+		}
+
 	}
 
-	for i, file := range matches {
-		matches[i] = strings.ReplaceAll(file, "\\", "/")
-	}
-
-	return matches, nil
+	return res, nil
 }
