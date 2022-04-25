@@ -33,6 +33,8 @@ func (h *Handler) CreateServiceDelete(url string, f *xlsx.File, sheet *xlsx.Shee
 					res.SetMsg("delete fail")
 				} else {
 					res.SetMsg("delete success")
+					// index 必定合法
+					_ = sheet.RemoveRowByIndex(int(index))
 				}
 			}
 

@@ -30,7 +30,7 @@ func checkPathWithSpace(h *Handler, rawPath, replace string) string {
 // 通过加载 *controller.Controller 创建服务器
 //
 // currentFc 为当前加载的文件配置
-func (h *Handler) UseController(cc *controller.Controller, currentFc *config.FileConfig) {
+func (h *Handler) UseController(cc *controller.Controller, fileConfig *config.FileConfig) {
 
 	_c := func(v string) string {
 		return checkPathWithSpace(h, v, "-")
@@ -44,8 +44,8 @@ func (h *Handler) UseController(cc *controller.Controller, currentFc *config.Fil
 			suffix string
 		)
 
-		if currentFc.Prefix != "" {
-			prefix = utils.GenStandardPath(currentFc.Prefix)
+		if fileConfig.Prefix != "" {
+			prefix = utils.GenStandardPath(fileConfig.Prefix)
 			suffix = utils.GenStandardPath(sheet.Name)
 			url = _c(utils.JoinStandardPath(prefix, suffix))
 		} else {
@@ -59,8 +59,9 @@ func (h *Handler) UseController(cc *controller.Controller, currentFc *config.Fil
 		})
 
 		// 筛选 sheet 并且建立服务
-		if currentFc.Sheets == nil || len(currentFc.Sheets) == 0 || utils.Exist(currentFc.Sheets, sheet.Name) {
-			HandlerCreateService(h, url, cc.File, &sheet)
+		if fileConfig.Sheets == nil || len(fileConfig.Sheets) == 0 || utils.Exist(fileConfig.Sheets, sheet.Name) {
+			// 必须传入的是 sheet 而不能是 &sheet
+			HandlerCreateService(h, url, cc.File, sheet)
 		}
 	}
 
@@ -69,14 +70,16 @@ func (h *Handler) UseController(cc *controller.Controller, currentFc *config.Fil
 // HandlerCreateService
 //
 // 创建服务
-func HandlerCreateService(h *Handler, url string, f *xlsx.File, sheet *xlsx.Sheet) {
+//
+// 必须传入的是 sheet 而不能是 &sheet
+func HandlerCreateService(h *Handler, url string, f *xlsx.File, sheet xlsx.Sheet) {
 
 	// 建立 GET 服务
-	h.CreateServiceGet(url, sheet)
+	h.CreateServiceGet(url, &sheet)
 
 	// 建立 POST 服务
-	h.CreateServicePost(url, f, sheet)
+	h.CreateServicePost(url, f, &sheet)
 
 	// 建立 DELETE 服务
-	h.CreateServiceDelete(url, f, sheet)
+	h.CreateServiceDelete(url, f, &sheet)
 }

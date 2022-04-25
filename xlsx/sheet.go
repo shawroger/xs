@@ -88,3 +88,39 @@ func (s *Sheet) GetRowByIndex(index int) (*Row, error) {
 		Name:  s.Name,
 	}
 }
+
+// RemoveRowByIndex
+//
+// 通过 index 删除 row
+func (s *Sheet) RemoveRowByIndex(i int) error {
+	if 0 < i && i <= len(s.Rows) {
+		s.Rows = append(s.Rows[:i-1], s.Rows[i:]...)
+		return nil
+	}
+
+	return ErrNotGetRowByIndex{
+		Index: i,
+		Name:  s.Name,
+	}
+}
+
+// AddRow
+//
+// 在末尾新增一项 row
+func (s *Sheet) AddRow(row Row) {
+	s.Rows = append(s.Rows, row)
+}
+
+// EditRow
+//
+// 在指定index处修改 row
+func (s *Sheet) EditRow(i int, row Row) error {
+	if 0 < i && i <= len(s.Rows) {
+		s.Rows[i-1] = row
+		return nil
+	}
+	return ErrNotGetRowByIndex{
+		Index: i,
+		Name:  s.Name,
+	}
+}

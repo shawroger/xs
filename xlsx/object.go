@@ -38,6 +38,7 @@ func NewObjectFromFile(f *File) (*Object, error) {
 				sheet.Rows = append(sheet.Rows, *parsedRow)
 			}
 		}
+
 		sheets = append(sheets, sheet)
 	}
 

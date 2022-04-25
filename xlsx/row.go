@@ -1,6 +1,7 @@
 package xlsx
 
 import (
+	"fmt"
 	"gitee.com/feimos/xs/datatype"
 	"gitee.com/feimos/xs/utils"
 )
@@ -31,6 +32,18 @@ func ParseRowFromStringArr(rows []string) *Row {
 	return &res
 }
 
+// ParseRowFromValueList
+//
+// 从双重 []any 数组创建 Row
+func ParseRowFromValueList(valueList []any) *Row {
+	var res Row
+	for _, val := range valueList {
+		res.Val = append(res.Val, NewValue(fmt.Sprintf("%v", val)))
+	}
+
+	return &res
+}
+
 // ToJsonWithKeys
 //
 // 将 Row 转为 json 格式
@@ -46,4 +59,21 @@ func (r *Row) ToJsonWithKeys(keys []string) *datatype.JsonMap {
 
 	}
 	return &json
+}
+
+// ToArray
+//
+// 将 Rows 转为 [][]string 格式
+func (r *Rows) ToArray() [][]string {
+	var res [][]string
+
+	for _, row := range *r {
+		item := make([]string, len(row.Val))
+		for i, v := range row.Val {
+			item[i] = v.Liter
+		}
+		res = append(res, item)
+	}
+
+	return res
 }

@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"gitee.com/feimos/xs/config"
 	"gitee.com/feimos/xs/datatype"
 	"gitee.com/feimos/xs/server"
@@ -55,8 +54,6 @@ func startServerFromConf(flags Flags, a *datatype.AppInfo) error {
 func startServerFromFile(flags Flags, a *datatype.AppInfo) error {
 
 	files, err := utils.ParseCmdFilesFlag(flags.files)
-
-	fmt.Printf("%#v\n", files)
 
 	if err != nil {
 		return err

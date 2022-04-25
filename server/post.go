@@ -37,6 +37,7 @@ func (h *Handler) CreateServicePost(url string, f *xlsx.File, sheet *xlsx.Sheet)
 					res.SetMsg("edit fail")
 				} else {
 					res.SetMsg("edit success")
+					_ = sheet.EditRow(int(index), *xlsx.ParseRowFromValueList(valueList))
 				}
 			}
 
@@ -48,6 +49,7 @@ func (h *Handler) CreateServicePost(url string, f *xlsx.File, sheet *xlsx.Sheet)
 				res.SetMsg("add fail")
 			} else {
 				res.SetMsg("add success")
+				sheet.AddRow(*xlsx.ParseRowFromValueList(valueList))
 			}
 
 		}
