@@ -10,8 +10,6 @@ import (
 //
 // 创建首页请求服务
 func (h *Handler) CreateServiceIndex() {
-	// 先开启静态资源
-	h.CreateServiceStatic()
 
 	h.GET("/", func(c *gin.Context) {
 		html := templates.BindIndexHtml(h.HTMLInjectData, h.AppInfo.Version)

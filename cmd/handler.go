@@ -11,7 +11,7 @@ type ErrMissingDataSource struct {
 }
 
 func (s ErrMissingDataSource) Error() string {
-	return "Missing flag which provide the data source\nconsider: using either \"-file\" or \"-conf\""
+	return "Missing flag which provides the data source\nconsider: using either \"-f\" or \"-c\""
 }
 
 func serverHandler(flags Flags, a *datatype.AppInfo) error {

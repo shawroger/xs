@@ -43,6 +43,10 @@ func New() *Handler {
 	h.EnableDebugMode()
 	h.DisableGinDebugMode()
 	h.Engine = gin.Default()
+
+	// 开启静态资源服务
+	h.CreateServiceStatic()
+
 	return h
 }
 
